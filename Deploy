@@ -8,7 +8,7 @@ if [ "$old_sum" != "$new_sum" ]; then
     echo -n "$new_sum" > Deploy.cache
 fi
 
-npm run deploy
+npm run build
 
 # Reload the server
-pm2 reload blog-server
+pm2 reload blog-backend

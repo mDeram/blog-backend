@@ -7,11 +7,12 @@ import {
 } from "apollo-server-core";
 
 import ArticleResolver from "./resolvers/article";
+import CategoryResolver from "./resolvers/category";
 
 export default (async (): Promise<Config> => {
     return {
         schema: await buildSchema({
-            resolvers: [ArticleResolver],
+            resolvers: [ArticleResolver, CategoryResolver],
         }),
         plugins: [
             ___prod___

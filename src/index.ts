@@ -1,7 +1,6 @@
 import "dotenv/config";
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
-import { FRONT_URL, PORT } from "./constants";
 import { createConnection } from "typeorm";
 import typeormConfig from "./typeorm.config";
 import express from "express";
@@ -15,16 +14,17 @@ const main = async () => {
     const apolloServer = new ApolloServer(await apolloConfig);
     await apolloServer.start();
 
+    const frontUrl = process.env.FRONT_URL || "";
     apolloServer.applyMiddleware({
         app,
         cors: {
-            origin: [FRONT_URL],
+            origin: [frontUrl],
         }
     });
 
-    app.listen(PORT, () => {
-
-        console.log(`Server started on ${PORT}`);
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => {
+        console.log(`Server started on port: ${port}, with front-url: ${frontUrl}`);
     });
 }
 
