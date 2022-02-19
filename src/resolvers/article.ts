@@ -28,20 +28,24 @@ export default class ArticleResolver {
         return Article.find();
     }
 
-    @Mutation(() => Article)
+    @Mutation(() => Article, { nullable: true })
     async createArticle(
         @Arg("author") author: string,
         @Arg("title") title: string,
         @Arg("markdown") markdown: string,
-    ): Promise<Article> {
-        return Article.create({
-            author,
-            title,
-            content: marked.parse(markdown),
-            markdown,
-            published: false,
-            slug: customSlugify(title)
-        }).save();
+    ): Promise<Article | null> {
+        try {
+            return await Article.create({
+                author,
+                title,
+                content: marked.parse(markdown),
+                markdown,
+                published: false,
+                slug: customSlugify(title),
+            }).save();
+        } catch(e) {
+            return null;
+        }
     }
 
     @Mutation(() => Boolean)
