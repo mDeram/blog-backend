@@ -1,5 +1,5 @@
 import Article from "../entities/Article";
-import { Arg, Int, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, FieldResolver, Int, Mutation, Query, Resolver, Root } from "type-graphql";
 import { marked } from "marked";
 import { customSlugify } from "../utils/customSlugify";
 
@@ -9,6 +9,14 @@ import { customSlugify } from "../utils/customSlugify";
 
 @Resolver(Article)
 export default class ArticleResolver {
+    @FieldResolver(() => String)
+    contentShort(
+        @Root() root: Article
+    ) {
+        const text = root.content.replace(/<[^>]+>/g, "");
+        return text.slice(0, 100);
+    }
+
     @Query(() => Article, { nullable: true })
     async article(
         @Arg("id", () => Int) id: number
