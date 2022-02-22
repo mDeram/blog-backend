@@ -14,7 +14,7 @@ export default class ArticleResolver {
         @Root() root: Article
     ) {
         const text = root.content.replace(/<[^>]+>/g, "");
-        return text.slice(0, 100);
+        return text.slice(0, 280);
     }
 
     @Query(() => Article, { nullable: true })
