@@ -32,6 +32,18 @@ export default class ArticleResolver {
     }
 
     @Query(() => [Article])
+    async articlesPublished(): Promise<Article[]> {
+        return Article.find({
+            where: {
+                published: true
+            },
+            order: {
+                createdAt: "DESC"
+            }
+        });
+    }
+
+    @Query(() => [Article])
     async articles(): Promise<Article[]> {
         return Article.find({
             order: {
