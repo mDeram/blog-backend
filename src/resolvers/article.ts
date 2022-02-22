@@ -33,7 +33,11 @@ export default class ArticleResolver {
 
     @Query(() => [Article])
     async articles(): Promise<Article[]> {
-        return Article.find();
+        return Article.find({
+            order: {
+                createdAt: "DESC"
+            }
+        });
     }
 
     @Mutation(() => Article, { nullable: true })
