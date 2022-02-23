@@ -1,7 +1,8 @@
 import Article from "../entities/Article";
-import { Arg, FieldResolver, Int, Mutation, Query, Resolver, Root } from "type-graphql";
+import { Arg, FieldResolver, Int, Mutation, Query, Resolver, Root, UseMiddleware } from "type-graphql";
 import { marked } from "marked";
 import { customSlugify } from "../utils/customSlugify";
+import isAuth from "../middlewares/isAuth";
 
 //TODO @UseMiddleware(isAuth)
 //TODO add error messages
@@ -18,6 +19,7 @@ export default class ArticleResolver {
     }
 
     @Query(() => Article, { nullable: true })
+    @UseMiddleware(isAuth)
     async article(
         @Arg("id", () => Int) id: number
     ): Promise<Article | undefined> {
@@ -28,7 +30,7 @@ export default class ArticleResolver {
     async articleBySlug(
         @Arg("slug") slug: string
     ): Promise<Article | undefined> {
-        return Article.findOne({ slug });
+        return Article.findOne({ slug, published: true });
     }
 
     @Query(() => [Article])
@@ -44,6 +46,7 @@ export default class ArticleResolver {
     }
 
     @Query(() => [Article])
+    @UseMiddleware(isAuth)
     async articles(): Promise<Article[]> {
         return Article.find({
             order: {
@@ -53,6 +56,7 @@ export default class ArticleResolver {
     }
 
     @Mutation(() => Article, { nullable: true })
+    @UseMiddleware(isAuth)
     async createArticle(
         @Arg("author") author: string,
         @Arg("title") title: string,
@@ -73,6 +77,7 @@ export default class ArticleResolver {
     }
 
     @Mutation(() => Boolean)
+    @UseMiddleware(isAuth)
     async updateArticle(
         @Arg("id", () => Int) id: number,
         @Arg("author") author: string,
@@ -90,6 +95,7 @@ export default class ArticleResolver {
     }
 
     @Mutation(() => Boolean)
+    @UseMiddleware(isAuth)
     async deleteArticle(
         @Arg("id", () => Int) id: number
     ): Promise<boolean> {
@@ -98,6 +104,7 @@ export default class ArticleResolver {
     }
 
     @Mutation(() => Boolean)
+    @UseMiddleware(isAuth)
     async setPublishArticle(
         @Arg("id", () => Int) id: number,
         @Arg("published") published: boolean
