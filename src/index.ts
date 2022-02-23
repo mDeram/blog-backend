@@ -26,11 +26,13 @@ const main = async () => {
         name: SESSION_COOKIE,
         cookie: {
             maxAge: 1000 * 3600 * 24 * 10, // 10 days
-            secure: ___prod___
+            secure: ___prod___,
+            sameSite: "lax",
+            httpOnly: true
         },
         secret: process.env.COOKIE_SECRET || "",
         resave: false,
-        saveUninitialized: false
+        saveUninitialized: false,
     }));
 
     const apolloServer = new ApolloServer(await apolloConfig);
@@ -41,6 +43,7 @@ const main = async () => {
         app,
         cors: {
             origin: [frontUrl],
+            credentials: true
         }
     });
 
