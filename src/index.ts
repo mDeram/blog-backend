@@ -5,11 +5,33 @@ import { createConnection } from "typeorm";
 import typeormConfig from "./typeorm.config";
 import express from "express";
 import apolloConfig from "./apollo.config";
+import session from "express-session";
+import { SESSION_COOKIE, ___prod___ } from "./constants";
+import connectRedis from "connect-redis";
+import Redis from "ioredis";
 
 const main = async () => {
     await createConnection(typeormConfig);
 
+    const RedisStore = connectRedis(session);
+    const redis = new Redis();
+
     const app = express();
+    //if (___prod___) app.set("trust proxy", 1);
+    app.use(session({
+        store: new RedisStore({
+            client: redis,
+            prefix: "blog:sess:"
+        }),
+        name: SESSION_COOKIE,
+        cookie: {
+            maxAge: 1000 * 3600 * 24 * 10, // 10 days
+            secure: ___prod___
+        },
+        secret: process.env.COOKIE_SECRET || "",
+        resave: false,
+        saveUninitialized: false
+    }));
 
     const apolloServer = new ApolloServer(await apolloConfig);
     await apolloServer.start();

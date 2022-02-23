@@ -8,16 +8,19 @@ import {
 
 import ArticleResolver from "./resolvers/article";
 import CategoryResolver from "./resolvers/category";
+import UserResolver from "./resolvers/user";
+import { MyContext } from "./types";
 
 export default (async (): Promise<Config> => {
     return {
         schema: await buildSchema({
-            resolvers: [ArticleResolver, CategoryResolver],
+            resolvers: [ArticleResolver, CategoryResolver, UserResolver],
         }),
         plugins: [
             ___prod___
                 ? ApolloServerPluginLandingPageDisabled()
                 : ApolloServerPluginLandingPageGraphQLPlayground()
-        ]
+        ],
+        context: ({ req }): MyContext => ({ req })
     };
 })();
