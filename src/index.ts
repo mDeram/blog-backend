@@ -43,7 +43,7 @@ const main = async () => {
     apolloServer.applyMiddleware({
         app,
         cors: {
-            origin: [frontUrl],
+            origin: ["http://localhost:6000", frontUrl],
             credentials: true
         }
     });
