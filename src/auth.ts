@@ -77,7 +77,6 @@ program
         let result;
         try {
             result = await User.delete({ username })
-            result.affected;
         } catch(e) {
             console.log(e);
             exit("Could not remove the user from the database");
@@ -92,7 +91,20 @@ program
         exit(`User ${username} has been successfully removed`);
     });
 
-//TODO flush feature
+program
+    .command("flush")
+    .description("remove all user")
+    .action(async () => {
+        try {
+            await User.clear();
+        } catch(e) {
+            console.log(e);
+            exit("Could not remove users from the database");
+            return;
+        }
+
+        exit(`Users have been successfully removed`);
+    });
 
 const main = async () => {
     await createConnection({
