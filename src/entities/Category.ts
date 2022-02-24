@@ -1,6 +1,7 @@
 import Article from "../entities/Article";
 import { Field, Int, ObjectType } from "type-graphql";
 import { BaseEntity, Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+
 @ObjectType()
 @Entity()
 export default class Category extends BaseEntity {

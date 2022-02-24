@@ -11,7 +11,9 @@ import connectRedis from "connect-redis";
 import Redis from "ioredis";
 
 const main = async () => {
-    await createConnection(typeormConfig);
+    const orm = await createConnection(typeormConfig);
+    if (___prod___)
+        await orm.runMigrations();
 
     const RedisStore = connectRedis(session);
     const redis = new Redis();
