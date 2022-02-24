@@ -1,7 +1,8 @@
 import User from "../entities/User";
-import { Arg, Ctx, Int, Mutation, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import argon2 from "argon2";
 import { MyContext } from "../types";
+import speakeasy from "speakeasy";
 
 @Resolver(User)
 export default class UserResolver {
@@ -9,7 +10,7 @@ export default class UserResolver {
     async login(
         @Arg("username") username: string,
         @Arg("password") password: string,
-        @Arg("authToken", () => Int) authToken: number,
+        @Arg("authToken") authToken: string,
         @Ctx() { req }: MyContext
     ) {
         // Waiting >= 0.5s and < 1s to protect against bruteforce attack
@@ -25,7 +26,13 @@ export default class UserResolver {
         const valid = await argon2.verify(user.password, password);
         if (!valid) return false;
 
-        //TODO add 2fa
+        const result = speakeasy.totp.verify({
+            secret: user.authToken,
+            encoding: "base32",
+            token: authToken
+        });
+
+        if (!result) return false;
 
         req.session.userId = user.id;
         return true;

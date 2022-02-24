@@ -5,6 +5,8 @@ import { program } from "commander";
 import User from "./entities/User";
 import prompts from "prompts";
 import argon2d from "argon2";
+import speakeasy from "speakeasy";
+import qrcode from "qrcode-terminal";
 
 program
     .name("auth-manager")
@@ -44,10 +46,14 @@ program
         }
 
         const hash = await argon2d.hash(password);
+
+        const { base32: secret } = speakeasy.generateSecret();
+        const otpauth_url = `otpauth://totp/Blog:${username}?secret=${secret}`;
+
         const newUser = User.create({
             username,
             password: hash,
-            authToken: ""
+            authToken: secret
         });
 
         try {
@@ -58,6 +64,9 @@ program
             return;
         }
 
+        qrcode.generate(otpauth_url);
+        console.log("Qrcode secret: ", secret);
+        console.log("Make sure you save the secret or the qrcode");
         exit(`User ${username} has been successfully saved to the database`);
     });
 
@@ -82,6 +91,8 @@ program
 
         exit(`User ${username} has been successfully removed`);
     });
+
+//TODO flush feature
 
 const main = async () => {
     await createConnection({
