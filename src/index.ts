@@ -12,14 +12,13 @@ import Redis from "ioredis";
 
 const main = async () => {
     const orm = await createConnection(typeormConfig);
-    if (___prod___)
-        await orm.runMigrations();
+    if (___prod___) await orm.runMigrations();
 
     const RedisStore = connectRedis(session);
     const redis = new Redis();
 
     const app = express();
-    //if (___prod___) app.set("trust proxy", 1);
+    if (___prod___) app.set("trust proxy", 1);
     app.use(session({
         store: new RedisStore({
             client: redis,
