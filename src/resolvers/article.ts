@@ -3,8 +3,8 @@ import { Arg, FieldResolver, Int, Mutation, Query, Resolver, Root, UseMiddleware
 import { marked } from "marked";
 import { customSlugify } from "../utils/customSlugify";
 import isAuth from "../middlewares/isAuth";
+import ISR, { ISRArticleById, ISRBlog } from "../middlewares/ISR";
 
-//TODO @UseMiddleware(isAuth)
 //TODO add error messages
 //TODO filed validation
 
@@ -77,7 +77,7 @@ export default class ArticleResolver {
     }
 
     @Mutation(() => Boolean)
-    @UseMiddleware(isAuth)
+    @UseMiddleware(isAuth, ISRBlog, ISRArticleById)
     async updateArticle(
         @Arg("id", () => Int) id: number,
         @Arg("author") author: string,
@@ -95,7 +95,7 @@ export default class ArticleResolver {
     }
 
     @Mutation(() => Boolean)
-    @UseMiddleware(isAuth)
+    @UseMiddleware(isAuth, ISRBlog, ISRArticleById)
     async deleteArticle(
         @Arg("id", () => Int) id: number
     ): Promise<boolean> {
@@ -104,7 +104,7 @@ export default class ArticleResolver {
     }
 
     @Mutation(() => Boolean)
-    @UseMiddleware(isAuth)
+    @UseMiddleware(isAuth, ISRBlog, ISRArticleById)
     async setPublishArticle(
         @Arg("id", () => Int) id: number,
         @Arg("published") published: boolean
