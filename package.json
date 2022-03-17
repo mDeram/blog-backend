@@ -15,6 +15,7 @@
   "author": "Deramecourt Mathurin",
   "license": "ISC",
   "dependencies": {
+    "apollo-server-core": "^3.6.4",
     "apollo-server-express": "^3.6.3",
     "argon2": "^0.28.4",
     "axios": "^0.26.1",
