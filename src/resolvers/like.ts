@@ -38,6 +38,7 @@ export default class LikeResolver {
 
         await Like.create({ articleId, ip }).save();
         article.likeCounter += 1;
+        await Article.save(article);
 
         return true;
     }
