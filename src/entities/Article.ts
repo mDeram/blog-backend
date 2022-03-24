@@ -1,6 +1,7 @@
-import Category from "../entities/Category";
+import Category from "./Category";
+import Like from "./Like";
 import { Field, Int, ObjectType } from "type-graphql";
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @ObjectType()
 @Entity()
@@ -32,6 +33,13 @@ export default class Article extends BaseEntity {
     @Field()
     @Column("text")
     content: string;
+
+    @Field(() => Int)
+    @Column({ type: "int", default: 0 })
+    likeCounter: number;
+
+    @OneToMany(() => Like, like => like.article)
+    likes: Like[];
 
     @Field(() => [Category])
     @ManyToMany(() => Category, category => category.articles)

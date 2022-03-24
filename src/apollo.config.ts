@@ -10,11 +10,12 @@ import ArticleResolver from "./resolvers/article";
 import CategoryResolver from "./resolvers/category";
 import UserResolver from "./resolvers/user";
 import { MyContext } from "./types";
+import LikeResolver from "./resolvers/like";
 
 export default (async (): Promise<Config> => {
     return {
         schema: await buildSchema({
-            resolvers: [ArticleResolver, CategoryResolver, UserResolver],
+            resolvers: [ArticleResolver, CategoryResolver, UserResolver, LikeResolver],
         }),
         plugins: [
             ___prod___

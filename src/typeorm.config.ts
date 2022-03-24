@@ -4,6 +4,7 @@ import path from "path";
 import Article from "./entities/Article";
 import Category from "./entities/Category";
 import User from "./entities/User";
+import Like from "./entities/Like";
 
 export default {
     type: "postgres",
@@ -12,6 +13,6 @@ export default {
     password: process.env.DB_PASS,
     logging: !___prod___,
     synchronize: !___prod___,
-    entities: [Article, Category, User],
+    entities: [Article, Category, User, Like],
     migrations: [path.join(__dirname, "./migrations/*")]
 } as ConnectionOptions;
