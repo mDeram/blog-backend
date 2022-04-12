@@ -4,6 +4,8 @@ import { marked } from "marked";
 import { customSlugify } from "../utils/customSlugify";
 import isAuth from "../middlewares/isAuth";
 import ISR, { ISRArticleById, ISRBlog } from "../middlewares/ISR";
+import Like from "../entities/Like";
+import { getManager } from "typeorm";
 
 //TODO add error messages
 //TODO filed validation
@@ -99,7 +101,10 @@ export default class ArticleResolver {
     async deleteArticle(
         @Arg("id", () => Int) id: number
     ): Promise<boolean> {
-        const result = await Article.delete(id);
+        const result = await getManager().transaction(async transaction => {
+            await transaction.delete(Like, { articleId: id });
+            return await transaction.delete(Article, id);
+        });
         return !!result.affected;
     }
 
