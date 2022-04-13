@@ -1,5 +1,5 @@
 import Article from "../entities/Article";
-import { Arg, FieldResolver, Int, Mutation, Query, Resolver, Root, UseMiddleware } from "type-graphql";
+import { Arg, Int, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { customSlugify } from "../utils/customSlugify";
 import isAuth from "../middlewares/isAuth";
 import { ISRArticleById, ISRBlog } from "../middlewares/ISR";
@@ -11,14 +11,6 @@ import { getManager } from "typeorm";
 
 @Resolver(Article)
 export default class ArticleResolver {
-    @FieldResolver(() => String)
-    contentShort(
-        @Root() root: Article
-    ) {
-        const text = root.markdown;
-        return text.slice(0, 280);
-    }
-
     @Query(() => Article, { nullable: true })
     @UseMiddleware(isAuth)
     async article(
@@ -62,12 +54,14 @@ export default class ArticleResolver {
         @Arg("author") author: string,
         @Arg("title") title: string,
         @Arg("markdown") markdown: string,
+        @Arg("description") description: string,
     ): Promise<Article | null> {
         try {
             return await Article.create({
                 author,
                 title,
                 markdown,
+                description,
                 published: false,
                 slug: customSlugify(title),
             }).save();
@@ -83,11 +77,13 @@ export default class ArticleResolver {
         @Arg("author") author: string,
         @Arg("title") title: string,
         @Arg("markdown") markdown: string,
+        @Arg("description") description: string,
     ): Promise<boolean> {
         const result = await Article.update(id, {
             author,
             title,
             markdown,
+            description,
             slug: customSlugify(title)
         });
         return !!result.affected;
