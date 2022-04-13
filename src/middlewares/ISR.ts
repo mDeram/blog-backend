@@ -2,7 +2,7 @@ import { MyContext } from "../types";
 import { MiddlewareFn, ResolverData } from "type-graphql";
 import axios from "axios";
 import Article from "../entities/Article";
-const basePath = "/blog";
+import { basePath } from "../constants";
 
 function triggerISR(path: string | undefined) {
     if (typeof path === "undefined") return;

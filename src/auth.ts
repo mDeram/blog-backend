@@ -48,7 +48,7 @@ program
         const hash = await argon2d.hash(password);
 
         const { base32: secret } = speakeasy.generateSecret();
-        const otpauth_url = `otpauth://totp/Blog:${username}?secret=${secret}`;
+        const otpauth_uri = `otpauth://totp/Blog:${username}?secret=${secret}`;
 
         const newUser = User.create({
             username,
@@ -64,7 +64,7 @@ program
             return;
         }
 
-        qrcode.generate(otpauth_url);
+        qrcode.generate(otpauth_uri);
         console.log("Qrcode secret: ", secret);
         console.log("Make sure you save the secret or the qrcode");
         exit(`User ${username} has been successfully saved to the database`);
