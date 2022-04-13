@@ -1,9 +1,8 @@
 import Article from "../entities/Article";
 import { Arg, FieldResolver, Int, Mutation, Query, Resolver, Root, UseMiddleware } from "type-graphql";
-import { marked } from "marked";
 import { customSlugify } from "../utils/customSlugify";
 import isAuth from "../middlewares/isAuth";
-import ISR, { ISRArticleById, ISRBlog } from "../middlewares/ISR";
+import { ISRArticleById, ISRBlog } from "../middlewares/ISR";
 import Like from "../entities/Like";
 import { getManager } from "typeorm";
 
@@ -16,7 +15,7 @@ export default class ArticleResolver {
     contentShort(
         @Root() root: Article
     ) {
-        const text = root.content.replace(/<[^>]+>/g, "");
+        const text = root.markdown;
         return text.slice(0, 280);
     }
 
@@ -68,7 +67,6 @@ export default class ArticleResolver {
             return await Article.create({
                 author,
                 title,
-                content: marked.parse(markdown),
                 markdown,
                 published: false,
                 slug: customSlugify(title),
@@ -89,7 +87,6 @@ export default class ArticleResolver {
         const result = await Article.update(id, {
             author,
             title,
-            content: marked.parse(markdown),
             markdown,
             slug: customSlugify(title)
         });

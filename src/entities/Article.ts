@@ -30,10 +30,6 @@ export default class Article extends BaseEntity {
     @Column("text")
     markdown: string;
 
-    @Field()
-    @Column("text")
-    content: string;
-
     @Field(() => Int)
     @Column({ type: "int", default: 0 })
     likeCounter: number;
