@@ -7,6 +7,7 @@ import prompts from "prompts";
 import argon2d from "argon2";
 import speakeasy from "speakeasy";
 import qrcode from "qrcode-terminal";
+import { ___prod___ } from "./constants";
 
 program
     .name("auth-manager")
@@ -48,7 +49,8 @@ program
         const hash = await argon2d.hash(password);
 
         const { base32: secret } = speakeasy.generateSecret();
-        const otpauth_uri = `otpauth://totp/Blog:${username}?secret=${secret}`;
+        const test = ___prod___ ? "" : "test:";
+        const otpauth_uri = `otpauth://totp/Blog:${test}${username}?secret=${secret}`;
 
         const newUser = User.create({
             username,
