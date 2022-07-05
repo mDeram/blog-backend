@@ -1,5 +1,6 @@
 # blog-backend
 Blog backend build with NodeJs, Redis, TypeORM with PostgreSQL and Apollo Server.
+
 [Frontend](https://github.com/mDeram/blog-frontend)
 
 ## Requirements
@@ -33,22 +34,28 @@ npm run migration:run
 2. Set all variables corresponding to the following descriptions:
 
 Your database password:
+
 `DB_PASS`
 
 Server port:
+
 `PORT`
 
 Frontend url (used for CORS):
+
 `FRONT_URL`
 
 Your cookies secret key:
+
 `COOKIE_SECRET`
 
 The same token used for the blog-frontend REVALIDATE_TOKEN environment variable:
+
 `REVALIDATE_TOKEN`
 
 The url to revalidate pages located at domain.com/FrontendbaseUrl/api/revalidate,
 or located at localhost:FrontendPort/FrontendbaseUrl/api/revalidate
+
 `REVALIDATE_URL`
 
 ## Creating admin account
