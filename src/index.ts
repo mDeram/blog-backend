@@ -10,6 +10,9 @@ import { SESSION_COOKIE, ___prod___ } from "./constants";
 import connectRedis from "connect-redis";
 import Redis from "ioredis";
 
+if (!process.env.COOKIE_SECRET) throw new Error("You need to set COOKIE_SECRET environment variable");
+if (!process.env.FRONT_URL) throw new Error("You need to set FRONT_URL environment variable");
+
 const main = async () => {
     const orm = await createConnection(typeormConfig);
     if (___prod___) await orm.runMigrations();
@@ -31,7 +34,7 @@ const main = async () => {
             sameSite: "lax",
             httpOnly: true
         },
-        secret: process.env.COOKIE_SECRET || "",
+        secret: process.env.COOKIE_SECRET!,
         resave: false,
         saveUninitialized: false,
     }));
@@ -39,18 +42,17 @@ const main = async () => {
     const apolloServer = new ApolloServer(await apolloConfig);
     await apolloServer.start();
 
-    const frontUrl = process.env.FRONT_URL || "";
     apolloServer.applyMiddleware({
         app,
         cors: {
-            origin: ["http://localhost:6000", frontUrl],
+            origin: process.env.FRONT_URL,
             credentials: true
         }
     });
 
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
-        console.log(`Server started on port: ${port}, with front-url: ${frontUrl}`);
+        console.log(`Server started on port: ${port}, with front-url: ${process.env.FRONT_URL}`);
     });
 }
 

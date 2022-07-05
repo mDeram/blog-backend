@@ -4,10 +4,12 @@ import axios from "axios";
 import Article from "../entities/Article";
 import { basePath } from "../constants";
 
+if (!process.env.REVALIDATE_URL) throw new Error("You need to set REVALIDATE_URL environment variable");
+
 function triggerISR(path: string | undefined) {
     if (typeof path === "undefined") return;
 
-    axios.get(process.env.REVALIDATE_URL || "", {
+    axios.get(process.env.REVALIDATE_URL!, {
         params: {
             token: process.env.REVALIDATE_TOKEN,
             path: basePath + path

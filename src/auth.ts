@@ -15,7 +15,7 @@ program
 
 program
     .command("ls")
-    .description("list all auth user")
+    .description("list all admin users")
     .action(async () => {
         const users = await User.find();
         exit(users);
@@ -23,7 +23,7 @@ program
 
 program
     .command("add <username>")
-    .description("add a user")
+    .description("add user")
     .action(async (username: string) => {
         const user = await User.findOne({ username });
         if (user) {
@@ -74,7 +74,7 @@ program
 
 program
     .command("rm <username>")
-    .description("remove a user")
+    .description("remove user")
     .action(async (username: string) => {
         let result;
         try {
@@ -95,7 +95,7 @@ program
 
 program
     .command("flush")
-    .description("remove all user")
+    .description("remove all users")
     .action(async () => {
         try {
             await User.clear();
